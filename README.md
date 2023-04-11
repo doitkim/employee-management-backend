@@ -1,6 +1,14 @@
 # 근태 관리 시스템 프로젝트
 
-## 작업 내역
+## 개발 목적
+
+- React, Node.js, JWT, TypeORM(Sequelize), Express, MySQL 숙련도 향상을 목적
+
+## 사용 기술
+
+- React, Node.js, JWT, TypeORM(Sequelize), Express, MySQL
+
+### 작업 내역
 
 - 작업일자 : 2023.04.11
 - 작업자 : doitKim
