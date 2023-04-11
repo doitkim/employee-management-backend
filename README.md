@@ -2,9 +2,9 @@
 
 ## 작업 내역
 
-작업일자 : 2023.04.11
-작업자 : doitKim
-작업 내용 :
+- 작업일자 : 2023.04.11
+- 작업자 : doitKim
+- 작업 내용 :
 
 1. Express, Sequelize, Sequelize-cli (개발환경) 설치
 
