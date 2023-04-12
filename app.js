@@ -1,7 +1,7 @@
 const express = require("express"); // Express 라이브러리 사용
-const { sequelize, Branch } = require("./models"); // DB 모델 및 sequelize 사용
+const { sequelize, Branch, Employee } = require("./models"); // DB 모델 및 sequelize 사용
 const cors = require("cors"); // CORS 문제 해결 위해 사용
-const jwtLoginAuth = require("./Auth/JWT/jwtLoginAuth");
+const { jwtLoginAuth, jwtDecoder } = require("./Auth/JWT/jwtLoginAuth");
 
 // jwt 라이브러리 사용 인증 폴더로 추후 이동
 // const jwt = require("jsonwebtoken");
@@ -25,10 +25,9 @@ app.use(express.json());
 // 로그인 요청 시 지점 테이블 조회하여 존재 확인
 app.post("/branchs", async (req, res) => {
   try {
-    console.log(req.body);
     const result = await Branch.findOne({
       where: {
-        branchCode: req.body.branchId,
+        branchId: req.body.branchId,
       },
     });
 
@@ -50,13 +49,45 @@ app.post("/branchs", async (req, res) => {
 
       // const token = jwt.sign(payload, secretKey, options);
       // return res.status(200).json(token);
-      const token = jwtLoginAuth(req.body.branchId);
+      const token = jwtLoginAuth(
+        req.body.branchId,
+        result.dataValues.branchName
+      );
+
       return res.status(200).json(token);
     } else {
       return res.status(401).json({ message: "Authentication failed" });
     }
   } catch (error) {
     console.log("로그인 실패");
+    console.log(error);
+  }
+});
+
+// 프론트에서 토큰 받고 복호화 시켜서 지점명 돌려주기 (앱 라우터 기능으로 추후 정리 예정)
+app.post("/auth", async (req, res) => {
+  try {
+    const token = req.body.token;
+    const decode = jwtDecoder(token);
+    return res.status(200).json(decode);
+  } catch (error) {
+    return res.status(401).json({ message: "Authentication failed" });
+  }
+});
+
+// 해당 지점 근로자 전체 조회
+app.post("/worker", async (req, res) => {
+  console.log(req.body);
+  try {
+    const result = await Employee.findAll({
+      where: {
+        branchId: req.body.branchID,
+      },
+    });
+
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 

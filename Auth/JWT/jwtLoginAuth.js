@@ -1,17 +1,22 @@
 const jwt = require("jsonwebtoken");
 const secretKey = "manager";
 
-function jwtLoginAuth(branchId) {
+function jwtLoginAuth(branchId, branchName) {
+  // console.log(`branchNAme:${branchName}`);
   const payload = {
     branchCode: branchId,
+    branchName,
     role: "admin",
   };
 
   const options = {
-    expiresIn: "1h", // 만료 기간
+    expiresIn: "24h", // 만료 기간
   };
 
   return jwt.sign(payload, secretKey, options);
 }
-
-module.exports = jwtLoginAuth;
+function jwtDecoder(token) {
+  const decoded = jwt.verify(token, secretKey);
+  return decoded;
+}
+module.exports = { jwtLoginAuth, jwtDecoder };
