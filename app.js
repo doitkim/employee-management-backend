@@ -3,10 +3,6 @@ const { sequelize, Branch, Employee } = require("./models"); // DB 모델 및 se
 const cors = require("cors"); // CORS 문제 해결 위해 사용
 const { jwtLoginAuth, jwtDecoder } = require("./Auth/JWT/jwtLoginAuth");
 
-// jwt 라이브러리 사용 인증 폴더로 추후 이동
-// const jwt = require("jsonwebtoken");
-// const secretKey = "manager";
-
 const app = express(); // 익스프레스 사용
 const port = 8000; // 포트 사용
 
@@ -38,17 +34,6 @@ app.post("/branchs", async (req, res) => {
 
     // 지점 정보와 인증코드가 일치 시 실행
     if (req.body.authNumber === result.dataValues.authenticationCode) {
-      // const payload = {
-      //   branchCode: req.body.branchId,
-      //   role: "admin",
-      // };
-
-      // const options = {
-      //   expiresIn: "1h", // 만료 기간
-      // };
-
-      // const token = jwt.sign(payload, secretKey, options);
-      // return res.status(200).json(token);
       const token = jwtLoginAuth(
         req.body.branchId,
         result.dataValues.branchName
@@ -77,7 +62,6 @@ app.post("/auth", async (req, res) => {
 
 // 해당 지점 근로자 전체 조회
 app.post("/worker", async (req, res) => {
-  console.log(req.body);
   try {
     const result = await Employee.findAll({
       where: {
@@ -91,6 +75,21 @@ app.post("/worker", async (req, res) => {
   }
 });
 
+app.post("/workerRegister", async (req, res) => {
+  try {
+    const result = await Employee.create({
+      employeeName: req.body.employeeName,
+      birthDate: req.body.birthDate,
+      phoneNumber: req.body.phoneNumber,
+      workDays: req.body.workDays,
+      hireDate: req.body.hireDate,
+      leaveDate: req.body.leaveDate,
+      branchId: req.body.branchId,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 // DB 연결 성공 로그 표출
 sequelize
   .sync({ force: false })
