@@ -8,7 +8,7 @@ class Employee extends Model {
       hooks: true,
     });
     Employee.hasMany(models.WorkSchedule, {
-      foreignKey: "employeeId",
+      foreignKey: "employeeName",
       onDelete: "CASCADE",
     });
   }

@@ -1,5 +1,5 @@
 const express = require("express"); // Express 라이브러리 사용
-const { sequelize, Branch, Employee } = require("./models"); // DB 모델 및 sequelize 사용
+const { sequelize, Branch, Employee, WorkSchedule } = require("./models"); // DB 모델 및 sequelize 사용
 const cors = require("cors"); // CORS 문제 해결 위해 사용
 const { jwtLoginAuth, jwtDecoder } = require("./Auth/JWT/jwtLoginAuth");
 
@@ -77,17 +77,51 @@ app.post("/worker", async (req, res) => {
 
 app.post("/workerRegister", async (req, res) => {
   try {
-    const result = await Employee.create({
-      employeeName: req.body.employeeName,
-      birthDate: req.body.birthDate,
+    const searchEmployee = await Employee.findAll({
+      where: {
+        phoneNumber: req.body.phoneNumber,
+      },
+    });
+    if (searchEmployee.length === 0) {
+      await Employee.create({
+        employeeName: req.body.employeeName,
+        birthDate: req.body.birthDate,
+        phoneNumber: req.body.phoneNumber,
+        workDays: req.body.workDays,
+        hireDate: req.body.hireDate,
+        leaveDate: req.body.leaveDate,
+        branchId: req.body.branchId,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/worktimeregit", async (req, res) => {
+  try {
+    await WorkSchedule.create({
+      employeeName: req.body.workerName,
       phoneNumber: req.body.phoneNumber,
-      workDays: req.body.workDays,
-      hireDate: req.body.hireDate,
-      leaveDate: req.body.leaveDate,
-      branchId: req.body.branchId,
+      workStartTime: req.body.startTime,
+      workEndTime: req.body.endTime,
     });
   } catch (error) {
     console.log(error);
+  }
+});
+
+app.post("/worktime", async (req, res) => {
+  try {
+    const result = await WorkSchedule.findAll({
+      where: {
+        employeeName: req.body.workerName,
+        phoneNumber: req.body.workerPhoneNumber,
+      },
+    });
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 // DB 연결 성공 로그 표출

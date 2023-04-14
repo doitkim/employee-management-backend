@@ -3,7 +3,7 @@ const { Model, DataTypes } = require("sequelize");
 class WorkSchedule extends Model {
   static associate(models) {
     WorkSchedule.belongsTo(models.Employee, {
-      foreignKey: "employeeId",
+      foreignKey: "employeeName",
       onDelete: "CASCADE",
       hooks: true,
     });
@@ -17,23 +17,27 @@ class WorkSchedule extends Model {
           primaryKey: true,
           autoIncrement: true,
         },
-        workDate: {
-          type: DataTypes.DATEONLY,
+        employeeName: {
+          type: DataTypes.STRING(50),
+          allowNull: false,
+        },
+        phoneNumber: {
+          type: DataTypes.STRING(20),
           allowNull: false,
         },
         workStartTime: {
-          type: DataTypes.TIME,
+          type: DataTypes.STRING(50),
           allowNull: false,
         },
         workEndTime: {
-          type: DataTypes.TIME,
+          type: DataTypes.STRING(50),
           allowNull: false,
         },
       },
       {
         sequelize,
         modelName: "WorkSchedule",
-        tableName: "work_schedules",
+        tableName: "workSchedules",
         timestamps: false,
       }
     );
