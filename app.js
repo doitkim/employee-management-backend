@@ -9,7 +9,7 @@ const port = 8000; // 포트 사용
 // 모든 출처에서 오는 요청을 신뢰하도록 설정
 let corsOptions = {
   origin: "*",
-  Credential: true,
+  credentials: true,
 };
 
 // CORS 설정
@@ -46,6 +46,7 @@ app.post("/branchs", async (req, res) => {
   } catch (error) {
     console.log("로그인 실패");
     console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -83,7 +84,7 @@ app.post("/workerRegister", async (req, res) => {
       },
     });
     if (searchEmployee.length === 0) {
-      await Employee.create({
+      const newEmployee = await Employee.create({
         employeeName: req.body.employeeName,
         birthDate: req.body.birthDate,
         phoneNumber: req.body.phoneNumber,
@@ -92,22 +93,27 @@ app.post("/workerRegister", async (req, res) => {
         leaveDate: req.body.leaveDate,
         branchId: req.body.branchId,
       });
+      return res.status(201).json(newEmployee);
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
 app.post("/worktimeregit", async (req, res) => {
   try {
-    await WorkSchedule.create({
-      employeeName: req.body.workerName,
-      phoneNumber: req.body.phoneNumber,
-      workStartTime: req.body.startTime,
-      workEndTime: req.body.endTime,
+    const { workerName, phoneNumber, startTime, endTime } = req.body;
+    const newWorkSchedule = await WorkSchedule.create({
+      employeeName: workerName,
+      phoneNumber,
+      workStartTime: startTime,
+      workEndTime: endTime,
     });
+    return res.status(201).json(newWorkSchedule);
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -124,6 +130,7 @@ app.post("/worktime", async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 // DB 연결 성공 로그 표출
 sequelize
   .sync({ force: false })

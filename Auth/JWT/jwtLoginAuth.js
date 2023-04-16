@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const secretKey = "manager";
 
 function jwtLoginAuth(branchId, branchName) {
-  // console.log(`branchNAme:${branchName}`);
   const payload = {
     branchCode: branchId,
     branchName,
