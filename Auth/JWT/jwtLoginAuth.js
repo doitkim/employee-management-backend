@@ -1,3 +1,4 @@
+// 로그인 성공 시 JWT 생성
 const jwt = require("jsonwebtoken");
 const secretKey = "manager";
 
