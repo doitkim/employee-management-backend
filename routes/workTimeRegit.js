@@ -1,4 +1,4 @@
-const { WorkSchedule } = require("../models");
+const { WorkSchedule, Employee } = require("../models");
 const express = require("express");
 const router = express.Router();
 
@@ -6,11 +6,16 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const { workerName, phoneNumber, startTime, endTime } = req.body;
+    const employeeInfo = await Employee.findOne({
+      where: { employeeName: workerName, phoneNumber },
+    });
+
     const newWorkSchedule = await WorkSchedule.create({
       employeeName: workerName,
       phoneNumber,
       workStartTime: startTime,
       workEndTime: endTime,
+      employeeId: employeeInfo.employeeId,
     });
     return res.status(201).json(newWorkSchedule);
   } catch (error) {

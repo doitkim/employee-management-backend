@@ -4,6 +4,8 @@ class Branch extends Model {
   static associate(models) {
     Branch.hasMany(models.Employee, {
       foreignKey: "branchId",
+      onDelete: "CASCADE",
+      hooks: true, // 추가
     });
   }
 
@@ -25,6 +27,7 @@ class Branch extends Model {
       },
       {
         sequelize,
+        timestamps: true,
         modelName: "Branch",
         tableName: "Branches",
         paranoid: false,

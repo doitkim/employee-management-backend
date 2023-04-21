@@ -7,7 +7,7 @@ const worker = require("./routes/employeeOfBranch"); // worker 라우팅
 const workerRegister = require("./routes/workerRegister"); // workerRegit 라우팅
 const workTimeRegit = require("./routes//workTimeRegit"); // workTimeRegit 라우팅
 const workTime = require("./routes/workTime"); // workTime 라우팅
-
+const deleteEmployee = require("./routes/deleteEmployee");
 const app = express(); // 익스프레스 사용
 const port = 8000; // 포트 사용
 
@@ -30,7 +30,7 @@ app.use("/worker", worker); // 해당 지점 근로자 전체 조회
 app.use("/workerRegister", workerRegister); // 해당 지점 근로자 등록
 app.use("/worktimeregit", workTimeRegit); // 해당 지점 근로자 근태 등록
 app.use("/worktime", workTime); // 해당 지점 근로자 근태 정보 확인
-
+app.use("/deleteEmployee", deleteEmployee); // 해당 지점의 근로자 정보 삭제
 // DB 연결 성공 로그 표출
 sequelize
   .sync({ force: false })

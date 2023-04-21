@@ -5,11 +5,12 @@ class Employee extends Model {
     Employee.belongsTo(models.Branch, {
       foreignKey: "branchId",
       onDelete: "CASCADE",
-      hooks: true,
+      hooks: true, // 추가
     });
     Employee.hasMany(models.WorkSchedule, {
-      foreignKey: "employeeName",
+      foreignKey: "employeeId", // 수정
       onDelete: "CASCADE",
+      hooks: true, // 추가
     });
   }
 
